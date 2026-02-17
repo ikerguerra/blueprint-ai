@@ -1,16 +1,34 @@
-import { google } from '@ai-sdk/google'
-import { streamText, convertToCoreMessages } from 'ai'
-import { constructPrompt, SYSTEM_PROMPT } from '@/lib/ai/generation'
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
+import { streamText } from 'ai'
+import { SYSTEM_PROMPT } from '@/lib/ai/generation'
 import { searchSimilarChunks } from '@/lib/ai/retrieval'
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30
 
 export async function POST(req: Request) {
-  const { messages, tenantId } = await req.json()
+  // Extract tenantId from the body, as headers are unreliable in some environments/proxies
+  const body = await req.json()
+
+  const { messages, tenantId, model } = body
+  console.log('📨 Messages:', messages.length)
+  console.log('� TenantId:', tenantId)
+  console.log('🤖 Requested Model:', model)
+
+  // Validate model
+  const allowedModels = [
+    'gemini-1.5-flash',
+    'gemini-2.0-flash-001',
+    'gemini-2.0-flash-lite-preview-02-05',
+    'gemini-pro',
+  ]
+  const selectedModel = allowedModels.includes(model)
+    ? model
+    : 'gemini-2.0-flash-001'
 
   if (!tenantId) {
-    return new Response('Missing tenantId', { status: 400 })
+    console.error('Missing tenantId in body')
+    return new Response('Missing tenantId in body', { status: 400 })
   }
 
   // Get the last user message
@@ -19,41 +37,96 @@ export async function POST(req: Request) {
 
   // 1. Retrieve relevant context
   try {
-    console.log(`🔍 Searching for context: "${query}" (Tenant: ${tenantId})`)
+    // 3. Search for context
     const contextChunks = await searchSimilarChunks(query, tenantId)
 
     const contextText = contextChunks.map((c) => c.content)
-    console.log(`📄 Found ${contextChunks.length} chunks.`)
 
-    // 2. Construct the full system prompt with context
-    // We don't put context in system prompt usually with Vercel AI SDK,
-    // but we can inject it as a system message or user message augmentation.
-    // Here we will augment the last user message for RAG.
+    // 2. Build system prompt with RAG context
+    const systemPromptWithContext = `${SYSTEM_PROMPT}
 
-    const promptWithContext = constructPrompt(query, contextText)
+RELEVANT CONTEXT FROM KNOWLEDGE BASE:
+${contextText.map((text, i) => `[${i + 1}] ${text}`).join('\n\n')}
 
-    // Replace the last user message content with the augmented prompt
-    // But keep the history intact
-    const coreMessages = convertToCoreMessages(messages)
-    const lastCoreMessage = coreMessages[coreMessages.length - 1]
+Use the above context to answer the user's question. If the context doesn't contain relevant information, say so.`
 
-    if (lastCoreMessage.role === 'user') {
-      lastCoreMessage.content = promptWithContext
+    // Normalize messages: convert 'parts' format to 'content' format
+    // Normalize messages: convert 'parts' format to 'content' format
+    // This is needed because toUIMessageStreamResponse() returns messages with 'parts'
+    // but streamText expects 'content'
+    interface MessagePart {
+      type: string
+      text: string
     }
 
-    console.log('🌊 Starting streamText...')
-    // 3. Stream the response
-    const result = await streamText({
-      model: google('gemini-2.0-flash-lite-preview-02-05'),
-      system: SYSTEM_PROMPT,
-      messages: coreMessages,
+    interface Message {
+      role: string
+      content?: string
+      parts?: MessagePart[]
+    }
+
+    const normalizedMessages = messages.map((msg: Message) => {
+      if (msg.content) {
+        // Already has content, return as-is
+        return msg
+      }
+      if (msg.parts && Array.isArray(msg.parts)) {
+        // Extract text from parts
+        const content = msg.parts
+          .filter((part: MessagePart) => part.type === 'text')
+          .map((part: MessagePart) => part.text)
+          .join('')
+        return { ...msg, content }
+      }
+      // Fallback: return message as-is
+      return msg
     })
 
-    console.log('✅ Stream initiated.')
-    return result.toDataStreamResponse()
+    console.log('🌊 Starting streamText...')
+
+    // Get API key from environment
+    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY
+    if (!apiKey) {
+      throw new Error(
+        'GOOGLE_GENERATIVE_AI_API_KEY environment variable is not set'
+      )
+    }
+
+    // Create Google provider with explicit API key
+    const google = createGoogleGenerativeAI({ apiKey })
+
+    // 3. Stream the response - use normalized messages
+    // 3. Stream the response - use normalized messages
+    const result = await streamText({
+      model: google(selectedModel), // Use the valid selected model
+      system: systemPromptWithContext,
+      messages: normalizedMessages,
+    })
+
+    return result.toUIMessageStreamResponse()
   } catch (err: unknown) {
     console.error('❌ Error in chat route:', err)
-    const message = err instanceof Error ? err.message : 'Unknown error'
-    return new Response(message, { status: 500 })
+
+    // Check for quota/429 errors
+    const errorMessage = err instanceof Error ? err.message : String(err)
+    if (
+      errorMessage.includes('429') ||
+      errorMessage.includes('Quota') ||
+      errorMessage.includes('Resource has been exhausted')
+    ) {
+      return new Response(
+        JSON.stringify({
+          error: 'Quota Exceeded',
+          message:
+            'You have reached the API limit for this model. Please try a different model or wait.',
+        }),
+        {
+          status: 429,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+    }
+
+    return new Response(errorMessage, { status: 500 })
   }
 }

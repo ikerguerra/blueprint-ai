@@ -7,7 +7,7 @@ export class GeminiEmbeddings extends Embeddings {
 
   constructor(fields?: EmbeddingsParams & { apiKey?: string; model?: string }) {
     super(fields ?? {})
-    const apiKey = fields?.apiKey || process.env.GOOGLE_API_KEY
+    const apiKey = fields?.apiKey || process.env.GOOGLE_GENERATIVE_AI_API_KEY
     if (!apiKey) {
       throw new Error('Google API key not found')
     }

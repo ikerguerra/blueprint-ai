@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { parsePdf, splitText } from '@/lib/ingestion/loader'
+import { parseFile, splitText } from '@/lib/ingestion/loader'
 import { embeddings } from '@/lib/ai/embedding'
 import prisma from '@/lib/prisma'
 
@@ -16,8 +16,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer())
-    const text = await parsePdf(buffer)
+    const text = await parseFile(file)
     const chunks = await splitText(text)
 
     // Create Document record
@@ -57,6 +56,8 @@ export async function POST(req: NextRequest) {
     // Best approach for pgvector in Prisma: use $executeRaw.
 
     for (const chunk of chunksWithEmbeddings) {
+      // Prisma's $executeRaw properly handles template literals for safe parameterization
+      // We pass the string representation of the vector, requiring a cast to ::vector in SQL
       const embeddingString = `[${chunk.embedding.join(',')}]`
       await prisma.$executeRaw`
         INSERT INTO "document_chunks" (id, content, metadata, "document_id", "tenant_id", embedding, "created_at")

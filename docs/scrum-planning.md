@@ -40,10 +40,10 @@ El backlog se divide en 4 grandes **Epics** que corresponden a los hitos del pro
 | ID | Tipo | Título | Historia de Usuario / Descripción | Criterios de Aceptación | Puntos (Est.) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **BR-11** | Story | Sistema de Autenticación | Como usuario, quiero registrarme e iniciar sesión para acceder a mis documentos privados. | - Login/Register con Supabase Auth.<br>- Asignación de usuario a un Tenant al registrarse.<br>- Protección de rutas privadas. | 5 |
-| **BR-12** | Story | Dashboard de Documentos | Como usuario, quiero ver una lista de mis documentos y su estado de procesamiento. | - Tabla de documentos subidos.<br>- Indicadores de estado (Procesando, Listo, Error).<br>- Botón para subir nuevos documentos. | 3 |
-| **BR-13** | Story | Interfaz de Chat | Como usuario, quiero una interfaz tipo chat para interactuar con mis documentos. | - Input de texto y lista de mensajes.<br>- Diferenciación visual Usuario vs IA.<br>- Scroll automático al nuevo mensaje. | 5 |
+| **BR-12** | Story | Dashboard de Documentos (Done ✅) | Como usuario, quiero ver una lista de mis documentos y su estado de procesamiento. | - Tabla de documentos subidos.<br>- Indicadores de estado (Procesando, Listo, Error).<br>- Botón para subir nuevos documentos. | 3 |
+| **BR-13** | Story | Interfaz de Chat (Done ✅) | Como usuario, quiero una interfaz tipo chat para interactuar con mis documentos. | - Input de texto y lista de mensajes.<br>- Diferenciación visual Usuario vs IA.<br>- Scroll automático al nuevo mensaje. | 5 |
 | **BR-14** | Story | Citado de Fuentes en UI | Como usuario, quiero saber qué documento se usó para generar la respuesta. | - La respuesta de la IA incluye metadatos de fuente.<br>- UI muestra "Fuente: [Nombre Doc]" al final o en tooltip. | 5 |
-| **BR-15** | Story | Renderizado de Markdown | Como usuario técnico, quiero ver el código y tablas formateados correctamente en el chat. | - Soporte para bloques de código con resaltado de sintaxis.<br>- Tablas y listas renderizadas correctamente. | 3 |
+| **BR-15** | Story | Renderizado de Markdown y Modelos (Done ✅) | Como usuario técnico, quiero ver el código formateado y poder cambiar de modelo si hay errores. | - Soporte blocks de código.<br>- Renderizado Markdown.<br>- Selector de modelos y manejo de errores 429. | 3 |
 
 ---
 
