@@ -17,14 +17,13 @@ export async function POST(req: Request) {
 
   // Validate model
   const allowedModels = [
-    'gemini-1.5-flash',
-    'gemini-2.0-flash-001',
-    'gemini-2.0-flash-lite-preview-02-05',
-    'gemini-pro',
+    'gemini-2.5-flash',
+    'gemini-2.5-flash-lite',
+    'gemini-3-flash-preview',
   ]
   const selectedModel = allowedModels.includes(model)
     ? model
-    : 'gemini-2.0-flash-001'
+    : 'gemini-2.5-flash'
 
   if (!tenantId) {
     console.error('Missing tenantId in body')

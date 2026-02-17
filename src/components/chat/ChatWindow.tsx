@@ -72,16 +72,17 @@ export default function ChatWindow({ tenantId }: { tenantId: string }) {
         <select
           value={selectedModel}
           onChange={handleModelChange}
-          className="p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          className="p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
           disabled={isLoading}
         >
-          <option value="gemini-2.0-flash-001">
-            Gemini 2.0 Flash (Recommended)
+          <option value="gemini-2.5-flash" className="text-gray-900">
+            Gemini 2.5 Flash
           </option>
-          <option value="gemini-1.5-flash">Gemini 1.5 Flash (Fallback)</option>
-          <option value="gemini-pro">Gemini Pro (Legacy)</option>
-          <option value="gemini-2.0-flash-lite-preview-02-05">
-            Gemini 2.0 Flash Lite (Preview)
+          <option value="gemini-2.5-flash-lite" className="text-gray-900">
+            Gemini 2.5 Flash Lite (Recommended)
+          </option>
+          <option value="gemini-3-flash-preview" className="text-gray-900">
+            Gemini 3 Flash Preview
           </option>
         </select>
       </div>
