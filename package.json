@@ -16,14 +16,17 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.29",
+    "@google/generative-ai": "^0.24.1",
     "@langchain/community": "^1.1.15",
     "@langchain/core": "^1.1.24",
-    "@langchain/openai": "^1.2.7",
+    "@langchain/google-genai": "^2.1.18",
     "@prisma/client": "^6.19.2",
     "@supabase/supabase-js": "^2.95.3",
-    "dotenv": "^17.3.1",
+    "ai": "^6.0.86",
     "langchain": "^1.2.24",
     "next": "16.1.6",
+    "openai": "^6.22.0",
     "pdf-parse": "^2.4.5",
     "pg": "^8.18.0",
     "react": "19.2.3",
@@ -34,6 +37,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.3.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "eslint-config-prettier": "^10.1.8",
@@ -42,6 +46,7 @@
     "prettier": "^3.8.1",
     "prisma": "^6.19.2",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

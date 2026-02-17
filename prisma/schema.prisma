@@ -37,7 +37,7 @@ model Document {
 model DocumentChunk {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   content    String   @db.Text
-  embedding  Unsupported("vector(1536)")?
+  embedding  Unsupported("vector(3072)")?
   metadata   Json?
   
   documentId String   @map("document_id") @db.Uuid
