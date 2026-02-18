@@ -9,12 +9,15 @@ import {
   Loader2,
 } from 'lucide-react'
 
+import { useRouter } from 'next/navigation'
+
 export default function DocumentUploader({ tenantId }: { tenantId: string }) {
   const [file, setFile] = useState<File | null>(null)
   const [status, setStatus] = useState<
     'idle' | 'uploading' | 'success' | 'error'
   >('idle')
   const [message, setMessage] = useState('')
+  const router = useRouter()
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -40,19 +43,20 @@ export default function DocumentUploader({ tenantId }: { tenantId: string }) {
 
       if (!res.ok) {
         const errorText = await res.text()
-        throw new Error(errorText || 'Upload failed')
+        throw new Error(errorText || 'Error en la subida')
       }
 
       setStatus('success')
-      setMessage('Document ingested successfully!')
+      setMessage('Documento procesado correctamente!')
       setFile(null) // Reset file input
+      router.refresh() // Refresh server components (DocumentList)
     } catch (error: unknown) {
       console.error(error)
       setStatus('error')
       if (error instanceof Error) {
         setMessage(error.message)
       } else {
-        setMessage('An unknown error occurred')
+        setMessage('Ocurrió un error desconocido')
       }
     }
   }
@@ -61,7 +65,7 @@ export default function DocumentUploader({ tenantId }: { tenantId: string }) {
     <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
       <h3 className="font-semibold text-lg mb-4 flex items-center text-gray-800">
         <FileText className="mr-2" size={20} />
-        Documents
+        Subir Documentos
       </h3>
 
       <div className="space-y-4">
@@ -79,7 +83,7 @@ export default function DocumentUploader({ tenantId }: { tenantId: string }) {
           >
             <Upload className="text-gray-400 mb-2" size={32} />
             <span className="text-sm text-gray-600">
-              {file ? file.name : 'Click to select PDF or TXT'}
+              {file ? file.name : 'Click para seleccionar PDF o TXT'}
             </span>
           </label>
         </div>
@@ -93,10 +97,10 @@ export default function DocumentUploader({ tenantId }: { tenantId: string }) {
             {status === 'uploading' ? (
               <>
                 <Loader2 className="animate-spin mr-2" size={16} />
-                Ingesting...
+                Procesando...
               </>
             ) : (
-              'Upload & Index'
+              'Subir e Indexar'
             )}
           </button>
         )}

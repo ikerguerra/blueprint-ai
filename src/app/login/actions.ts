@@ -19,7 +19,7 @@ export async function login(formData: FormData) {
   })
 
   if (error) {
-    redirect('/login?error=Could not authenticate user')
+    redirect('/login?error=No se pudo autenticar al usuario')
   }
 
   revalidatePath('/', 'layout')
@@ -39,7 +39,7 @@ export async function signup(formData: FormData) {
   })
 
   if (error) {
-    redirect('/login?error=Could not create user')
+    redirect('/login?error=No se pudo crear el usuario')
   }
 
   // Assign demo tenant logic could go here

@@ -51,13 +51,16 @@ El objetivo es construir un sistema robusto, seguro y escalable que permita a m�
 **Objetivo:** Crear una interfaz de usuario pulida y profesional.
 
 - [x] **Desarrollo del Frontend (Next.js + Tailwind CSS)**
-    - [ ] Implementar sistema de autenticaci처n (Login/Register) con soporte multi-tenant.
+    - [x] Implementar sistema de autenticaci처n (Login/Register) con soporte multi-tenant.
     - [x] Crear Dashboard principal (lista de documentos, estado de ingesti처n).
     - [x] Desarrollar interfaz de Chat interactiva.
         - [x] Visualizaci처n de mensajes user/AI.
         - [x] Indicadores de "Escribiendo..." y estado de carga.
         - [x] Renderizado de Markdown en respuestas (c처digo, tablas).
         - [x] Selector de Modelos (Gemini 2.0/1.5/Pro).
+    - [x] **Gesti처n de Documentos**
+        - [x] Listado de documentos por Tenant.
+        - [x] Eliminaci처n de documentos y sus vectores asociados.
 
 - [ ] **Citado de Fuentes**
     - [ ] Modificar respuesta del LLM/RAG para incluir referencias a los documentos fuente.

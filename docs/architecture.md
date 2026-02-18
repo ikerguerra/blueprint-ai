@@ -11,7 +11,9 @@ graph TD
     
     subgraph "Capa de Aplicación"
         Frontend -->|API Routes| API[Backend API (Next.js / Node.js)]
+        Frontend -->|API Routes| API[Backend API (Next.js / Node.js)]
         API -->|Auth| AuthProvider[Supabase Auth]
+        AuthProvider -->|Trigger| UserSync[Sincronización de Usuarios (Public Table)]
     end
 
     subgraph "Capa de Datos & IA"
