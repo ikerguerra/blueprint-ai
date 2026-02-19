@@ -68,7 +68,7 @@ export default function ChatWindow({ tenantId }: { tenantId: string }) {
       {/* Header with Model Selector */}
       <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50 rounded-t-lg">
         <h2 className="text-lg font-semibold text-gray-700">
-          Blueprint AI Chat
+          Chat de Blueprint AI
         </h2>
         <select
           value={selectedModel}
@@ -80,7 +80,7 @@ export default function ChatWindow({ tenantId }: { tenantId: string }) {
             Gemini 2.5 Flash
           </option>
           <option value="gemini-2.5-flash-lite" className="text-gray-900">
-            Gemini 2.5 Flash Lite (Recommended)
+            Gemini 2.5 Flash Lite (Recomendado)
           </option>
           <option value="gemini-3-flash-preview" className="text-gray-900">
             Gemini 3 Flash Preview
@@ -95,10 +95,10 @@ export default function ChatWindow({ tenantId }: { tenantId: string }) {
               <Bot size={48} className="text-blue-500" />
             </div>
             <h3 className="text-xl font-semibold mb-2">
-              How can I help you today?
+              ¿En qué puedo ayudarte hoy?
             </h3>
             <p className="text-sm">
-              Ask questions about your uploaded documents.
+              Haz preguntas sobre tus documentos subidos.
             </p>
           </div>
         )}
@@ -141,7 +141,7 @@ export default function ChatWindow({ tenantId }: { tenantId: string }) {
           <div className="flex justify-start">
             <div className="flex items-center space-x-2 text-gray-500 bg-gray-50 p-3 rounded-lg">
               <Loader2 className="animate-spin" size={16} />
-              <span className="text-xs">Generating response...</span>
+              <span className="text-xs">Generando respuesta...</span>
             </div>
           </div>
         )}
@@ -178,7 +178,7 @@ export default function ChatWindow({ tenantId }: { tenantId: string }) {
             className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
             value={input}
             onChange={handleInputChange}
-            placeholder="Ask a question..."
+            placeholder="Haz una pregunta..."
             disabled={isLoading}
           />
           <button
