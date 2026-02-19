@@ -62,9 +62,6 @@ El objetivo es construir un sistema robusto, seguro y escalable que permita a m�
         - [x] Listado de documentos por Tenant.
         - [x] Eliminación de documentos y sus vectores asociados.
 
-- [ ] **Citado de Fuentes**
-    - [ ] Modificar respuesta del LLM/RAG para incluir referencias a los documentos fuente.
-    - [ ] Implementar UI para mostrar "Fuente: Manual de Usuario v1, pág 42" al pasar el mouse o clicar.
 
 - [x] **Gestión de Errores y Feedback**
     - [x] Manejo elegante de errores (API timeout, documentos no procesables, cuotas).
@@ -87,3 +84,12 @@ El objetivo es construir un sistema robusto, seguro y escalable que permita a m�
 - [ ] **Documentación Final y Demo**
     - [ ] Crear `README.md` detallado con instrucciones de despliegue local.
     - [ ] Grabar video demo del flujo completo.
+
+---
+
+## Hito 5: Futuras Mejoras (Post-MVP)
+**Objetivo:** Funcionalidades avanzadas para mejorar la confianza y utilidad.
+
+- [ ] **Citado de Fuentes**
+    - [ ] Modificar respuesta del LLM/RAG para incluir referencias a los documentos fuente.
+    - [ ] Implementar UI para mostrar "Fuente: Manual de Usuario v1, pág 42" al pasar el mouse o clicar.

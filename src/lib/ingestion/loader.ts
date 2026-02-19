@@ -52,7 +52,6 @@ export async function splitText(
     chunkOverlap,
   })
 
-  // @ts-expect-error - pdf-parse types are not perfect - Langchain types might be slightly off between versions
   const output = await splitter.createDocuments([text])
 
   return output.map((doc) => ({

@@ -4,13 +4,14 @@ import { useChat } from '@ai-sdk/react'
 import ReactMarkdown from 'react-markdown'
 import { Send, User, Bot, Loader2, AlertCircle } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { Message } from 'ai'
+// import { UIMessage as Message } from 'ai'
 
 export default function ChatWindow({ tenantId }: { tenantId: string }) {
   const { messages, status, sendMessage, error } = useChat()
 
   // Helper function to get message content (handles both 'content' and 'parts' formats)
-  const getMessageContent = (message: Message): string => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const getMessageContent = (message: any): string => {
     if (message.content) {
       return message.content
     }

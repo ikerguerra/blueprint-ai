@@ -61,4 +61,4 @@ graph TD
 2. **Embedding:** La pregunta se convierte en un vector usando el mismo modelo que los documentos.
 3. **Búsqueda Híbrida/Vectorial:** Se buscan los `k` fragmentos más similares en la BD, filtrando estrictamente por `tenant_id`.
 4. **Contextualización:** Se construye un prompt: "Usa el siguiente contexto: [Fragmentos] para responder a: [Pregunta]".
-5. **Generación:** El LLM genera la respuesta citando las fuentes.
+5. **Generación:** El LLM genera la respuesta (citado de fuentes planificado para futuro).

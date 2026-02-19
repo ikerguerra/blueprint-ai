@@ -1,7 +1,9 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { streamText } from 'ai'
 import { SYSTEM_PROMPT } from '@/lib/ai/generation'
+
 import { searchSimilarChunks } from '@/lib/ai/retrieval'
+import { logTokenUsage } from '@/lib/usage-logger'
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30
@@ -100,6 +102,15 @@ Use the above context to answer the user's question. If the context doesn't cont
       model: google(selectedModel), // Use the valid selected model
       system: systemPromptWithContext,
       messages: normalizedMessages,
+      onFinish: async ({ usage }) => {
+        const { inputTokens, outputTokens } = usage
+        await logTokenUsage({
+          tenantId,
+          model: selectedModel,
+          inputTokens: inputTokens || 0,
+          outputTokens: outputTokens || 0,
+        })
+      },
     })
 
     return result.toUIMessageStreamResponse()

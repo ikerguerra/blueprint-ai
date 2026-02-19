@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useTransition } from 'react'
+import { useState, useEffect, useTransition, useCallback } from 'react'
 import { FileText, Trash2, Loader2, RefreshCw } from 'lucide-react'
 import { getDocuments, deleteDocument } from '@/app/actions'
 import { useRouter } from 'next/navigation'
@@ -22,7 +22,7 @@ export default function DocumentList({ tenantId }: { tenantId: string }) {
   const router = useRouter()
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
-  const fetchDocuments = async () => {
+  const fetchDocuments = useCallback(async () => {
     try {
       const docs = await getDocuments(tenantId)
       setDocuments(docs)
@@ -31,11 +31,11 @@ export default function DocumentList({ tenantId }: { tenantId: string }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [tenantId])
 
   useEffect(() => {
     fetchDocuments()
-  }, [tenantId])
+  }, [fetchDocuments])
 
   const confirmDelete = (id: string) => {
     setDeleteId(id)
