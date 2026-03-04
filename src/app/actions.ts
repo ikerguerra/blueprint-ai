@@ -70,6 +70,12 @@ export async function deleteDocument(id: string, tenantId: string) {
     throw new Error('No autorizado')
   }
 
+  if (user.email === 'demo@blueprintai.com') {
+    throw new Error(
+      'Operación no permitida en el entorno de prueba. Por favor, regístrate para gestionar documentos.'
+    )
+  }
+
   const dbUser = await prisma.user.findUnique({
     where: { id: user.id },
     select: { tenantId: true },

@@ -2,12 +2,34 @@ import { NextRequest, NextResponse } from 'next/server'
 import { parseFile, splitText } from '@/lib/ingestion/loader'
 import { embeddings } from '@/lib/ai/embedding'
 import prisma from '@/lib/prisma'
+import { createClient } from '@/lib/supabase/server'
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData()
     const file = formData.get('file') as File
     const tenantId = formData.get('tenantId') as string // For MVP, pass basic tenantId
+
+    const authHeader = req.headers.get('authorization')
+    const isServerAdmin =
+      authHeader === `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`
+
+    if (!isServerAdmin) {
+      const supabase = await createClient()
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (user?.email === 'demo@blueprintai.com') {
+        return NextResponse.json(
+          {
+            error:
+              'Operación no permitida en el entorno de prueba. Por favor, regístrate para subir archivos.',
+          },
+          { status: 403 }
+        )
+      }
+    }
 
     if (!file || !tenantId) {
       return NextResponse.json(

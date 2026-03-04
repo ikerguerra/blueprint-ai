@@ -26,13 +26,15 @@ export default async function Home() {
   // Fallback to user.id if not found (should not happen with trigger)
   const tenantId = dbUser?.tenantId ?? user.id
 
+  const isReadOnly = user.email === 'demo@blueprintai.com'
+
   return (
     <DashboardLayout
       userEmail={user.email ?? 'Usuario'}
       sidebarContent={
         <>
-          <DocumentUploader tenantId={tenantId} />
-          <DocumentList tenantId={tenantId} />
+          <DocumentUploader tenantId={tenantId} isReadOnly={isReadOnly} />
+          <DocumentList tenantId={tenantId} isReadOnly={isReadOnly} />
         </>
       }
       mainContent={<ChatWindow tenantId={tenantId} />}

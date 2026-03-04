@@ -15,7 +15,13 @@ interface Document {
   }
 }
 
-export default function DocumentList({ tenantId }: { tenantId: string }) {
+export default function DocumentList({
+  tenantId,
+  isReadOnly,
+}: {
+  tenantId: string
+  isReadOnly?: boolean
+}) {
   const [documents, setDocuments] = useState<Document[]>([])
   const [loading, setLoading] = useState(true)
   const [isPending, startTransition] = useTransition()
@@ -103,14 +109,16 @@ export default function DocumentList({ tenantId }: { tenantId: string }) {
                     </p>
                   </div>
                 </div>
-                <button
-                  onClick={() => confirmDelete(doc.id)}
-                  disabled={isPending}
-                  className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-all"
-                  title="Eliminar documento"
-                >
-                  <Trash2 size={14} />
-                </button>
+                {!isReadOnly && (
+                  <button
+                    onClick={() => confirmDelete(doc.id)}
+                    disabled={isPending}
+                    className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-all"
+                    title="Eliminar documento"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                )}
               </div>
             </li>
           ))}

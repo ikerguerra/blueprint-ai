@@ -14,7 +14,13 @@ import { useRouter } from 'next/navigation'
 const MAX_FILE_SIZE_MB = 1.5
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 
-export default function DocumentUploader({ tenantId }: { tenantId: string }) {
+export default function DocumentUploader({
+  tenantId,
+  isReadOnly,
+}: {
+  tenantId: string
+  isReadOnly?: boolean
+}) {
   const [file, setFile] = useState<File | null>(null)
   const [status, setStatus] = useState<
     'idle' | 'uploading' | 'success' | 'error'
@@ -82,6 +88,26 @@ export default function DocumentUploader({ tenantId }: { tenantId: string }) {
         setMessage('Ocurrió un error desconocido')
       }
     }
+  }
+
+  if (isReadOnly) {
+    return (
+      <div className="bg-blue-50 p-4 rounded-lg shadow-sm border border-blue-200">
+        <h3 className="font-semibold text-lg mb-2 flex items-center text-blue-800">
+          <FileText className="mr-2" size={20} />
+          Modo de Prueba
+        </h3>
+        <p className="text-sm text-blue-700 leading-relaxed">
+          Estás pre-visualizando un entorno de prueba pública equipado con la
+          documentación técnica original de Blueprint AI.
+          <br />
+          <br />
+          Para aislar entornos, la subida de nuevos archivos está desactivada.{' '}
+          <strong>Crea una cuenta gratuita</strong> para procesar tus propios
+          documentos de la misma manera.
+        </p>
+      </div>
+    )
   }
 
   return (

@@ -7,7 +7,7 @@ import { ButtonHTMLAttributes } from 'react'
 interface SubmitButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string
   loadingText?: string
-  variant?: 'primary' | 'secondary'
+  variant?: 'primary' | 'secondary' | 'cta'
 }
 
 export function SubmitButton({
@@ -20,11 +20,14 @@ export function SubmitButton({
   const { pending } = useFormStatus()
 
   const baseStyles =
-    'w-full flex justify-center py-2 px-4 border rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+    'w-full flex justify-center py-2.5 px-4 border rounded-lg shadow-sm text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed items-center'
 
   const variants = {
-    primary: 'border-transparent text-white bg-blue-600 hover:bg-blue-700',
-    secondary: 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50',
+    primary:
+      'border-transparent text-white bg-gray-900 hover:bg-gray-800 focus:ring-gray-900',
+    secondary:
+      'border-gray-200 text-gray-700 bg-white hover:bg-gray-50 focus:ring-gray-200',
+    cta: 'border-transparent text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:ring-indigo-500 shadow-md hover:shadow-lg transform hover:-translate-y-0.5',
   }
 
   return (
