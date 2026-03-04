@@ -16,6 +16,18 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    const MAX_FILE_SIZE_MB = 1.5
+    const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
+
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      return NextResponse.json(
+        {
+          error: `El archivo excede el límite de tamaño de ${MAX_FILE_SIZE_MB} MB.`,
+        },
+        { status: 413 }
+      )
+    }
+
     const text = await parseFile(file)
     const chunks = await splitText(text)
 

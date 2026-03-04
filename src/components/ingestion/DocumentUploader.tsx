@@ -11,6 +11,9 @@ import {
 
 import { useRouter } from 'next/navigation'
 
+const MAX_FILE_SIZE_MB = 1.5
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
+
 export default function DocumentUploader({ tenantId }: { tenantId: string }) {
   const [file, setFile] = useState<File | null>(null)
   const [status, setStatus] = useState<
@@ -21,7 +24,20 @@ export default function DocumentUploader({ tenantId }: { tenantId: string }) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0])
+      const selectedFile = e.target.files[0]
+
+      if (selectedFile.size > MAX_FILE_SIZE_BYTES) {
+        setFile(null)
+        setStatus('error')
+        setMessage(
+          `El archivo excede el límite de tamaño de ${MAX_FILE_SIZE_MB} MB.`
+        )
+        // Reset input value to allow selecting the same file again if desired
+        e.target.value = ''
+        return
+      }
+
+      setFile(selectedFile)
       setStatus('idle')
       setMessage('')
     }
@@ -42,8 +58,15 @@ export default function DocumentUploader({ tenantId }: { tenantId: string }) {
       })
 
       if (!res.ok) {
-        const errorText = await res.text()
-        throw new Error(errorText || 'Error en la subida')
+        let errorMessage = 'Error en la subida'
+        try {
+          const errorData = await res.json()
+          errorMessage = errorData.error || errorMessage
+        } catch {
+          const errorText = await res.text()
+          errorMessage = errorText || errorMessage
+        }
+        throw new Error(errorMessage)
       }
 
       setStatus('success')
@@ -82,9 +105,14 @@ export default function DocumentUploader({ tenantId }: { tenantId: string }) {
             className="cursor-pointer flex flex-col items-center"
           >
             <Upload className="text-gray-400 mb-2" size={32} />
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-600 font-medium">
               {file ? file.name : 'Click para seleccionar PDF o TXT'}
             </span>
+            {!file && (
+              <span className="text-xs text-gray-400 mt-1">
+                Máximo {MAX_FILE_SIZE_MB} MB por archivo
+              </span>
+            )}
           </label>
         </div>
 
@@ -107,15 +135,15 @@ export default function DocumentUploader({ tenantId }: { tenantId: string }) {
 
         {status === 'success' && (
           <div className="p-3 bg-green-50 text-green-700 rounded-md text-sm flex items-center">
-            <CheckCircle className="mr-2" size={16} />
-            {message}
+            <CheckCircle className="mr-2 flex-shrink-0" size={16} />
+            <span>{message}</span>
           </div>
         )}
 
         {status === 'error' && (
-          <div className="p-3 bg-red-50 text-red-700 rounded-md text-sm flex items-center">
-            <AlertCircle className="mr-2" size={16} />
-            {message}
+          <div className="p-3 bg-red-50 text-red-700 rounded-md text-sm flex items-start">
+            <AlertCircle className="mr-2 mt-0.5 flex-shrink-0" size={16} />
+            <span>{message}</span>
           </div>
         )}
       </div>
