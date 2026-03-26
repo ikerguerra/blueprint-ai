@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useChat } from '@ai-sdk/react'
 import ReactMarkdown from 'react-markdown'
@@ -28,7 +28,9 @@ export default function ChatWindow({ tenantId }: { tenantId: string }) {
     return ''
   }
 
-  const [selectedModel, setSelectedModel] = useState('gemini-2.0-flash-001')
+  const [selectedModel, setSelectedModel] = useState(
+    'gemini-3.1-flash-lite-preview'
+  )
   const [input, setInput] = useState('')
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,8 +81,11 @@ export default function ChatWindow({ tenantId }: { tenantId: string }) {
           <option value="gemini-2.5-flash" className="text-gray-900">
             Gemini 2.5 Flash
           </option>
-          <option value="gemini-2.5-flash-lite" className="text-gray-900">
-            Gemini 2.5 Flash Lite (Recomendado)
+          <option
+            value="gemini-3.1-flash-lite-preview"
+            className="text-gray-900"
+          >
+            Gemini 3.1 Flash Lite Preview (Recomendado)
           </option>
           <option value="gemini-3-flash-preview" className="text-gray-900">
             Gemini 3 Flash Preview

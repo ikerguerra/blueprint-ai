@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 // Initialize Gemini Client
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!)
 const model = genAI.getGenerativeModel({
-  model: 'gemini-2.0-flash-lite-preview-02-05',
+  model: 'gemini-3.1-flash-lite-preview',
 })
 
 export const SYSTEM_PROMPT = `

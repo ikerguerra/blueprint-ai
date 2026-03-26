@@ -20,7 +20,7 @@ export async function POST(req: Request) {
   // Validate model
   const allowedModels = [
     'gemini-2.5-flash',
-    'gemini-2.5-flash-lite',
+    'gemini-3.1-flash-lite-preview',
     'gemini-3-flash-preview',
   ]
   const selectedModel = allowedModels.includes(model)
@@ -67,17 +67,30 @@ Use the above context to answer the user's question. If the context doesn't cont
     }
 
     const normalizedMessages = messages.map((msg: Message) => {
-      if (msg.content) {
-        // Already has content, return as-is
+      // If we only have content, return as-is
+      if (msg.content && !msg.parts) {
         return msg
       }
       if (msg.parts && Array.isArray(msg.parts)) {
-        // Extract text from parts
+        // Extract text and reasoning (thought signatures) from parts
+        // This ensures Gemini 3's reasoning capabilities are maintained
+        // as required by the API update notice.
         const content = msg.parts
-          .filter((part: MessagePart) => part.type === 'text')
-          .map((part: MessagePart) => part.text)
-          .join('')
-        return { ...msg, content }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .filter(
+            (part: any) => part.type === 'text' || part.type === 'reasoning'
+          )
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .map((part: any) => {
+            if (part.type === 'reasoning') {
+              return {
+                type: 'reasoning',
+                reasoning: part.reasoning || part.text || '',
+              }
+            }
+            return { type: 'text', text: part.text || '' }
+          })
+        return { ...msg, content, parts: undefined }
       }
       // Fallback: return message as-is
       return msg
