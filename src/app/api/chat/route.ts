@@ -57,7 +57,9 @@ Use the above context to answer the user's question. If the context doesn't cont
     // but streamText expects 'content'
     interface MessagePart {
       type: string
-      text: string
+      text?: string
+      reasoning?: string
+      [key: string]: unknown
     }
 
     interface Message {
@@ -76,17 +78,14 @@ Use the above context to answer the user's question. If the context doesn't cont
         // This ensures Gemini 3's reasoning capabilities are maintained
         // as required by the API update notice.
         const content = msg.parts
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           .filter(
-            (part: any) => part.type === 'text' || part.type === 'reasoning'
+            (part: MessagePart) =>
+              part.type === 'text' || part.type === 'reasoning'
           )
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .map((part: any) => {
+          .map((part: MessagePart) => {
             if (part.type === 'reasoning') {
-              return {
-                type: 'reasoning',
-                reasoning: part.reasoning || part.text || '',
-              }
+              // Devuelve la parte exactamente como se recibió para no perder `signature` ni otros metadatos
+              return part
             }
             return { type: 'text', text: part.text || '' }
           })
